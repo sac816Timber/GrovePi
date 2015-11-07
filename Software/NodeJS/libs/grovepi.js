@@ -107,17 +107,21 @@ GrovePi.prototype.checkStatus = function() {
   }
   return true
 }
-GrovePi.prototype.readByte = function() {
+GrovePi.prototype.readByte = function(_address) {
+  var address = _address || ADDRESS
+
   var isOperative = this.checkStatus()
   if (!isOperative)
     return false
 
   var length = 1
   var buffer = new Buffer(length)
-  var ret = bus.i2cReadSync(ADDRESS, length, buffer)
+  var ret = bus.i2cReadSync(address, length, buffer)
   return ret > 0 ? buffer : false
 }
-GrovePi.prototype.readBytes = function(length) {
+GrovePi.prototype.readBytes = function(length, _address) {
+  var address = _address || ADDRESS
+
   if (typeof length == 'undefined')
     length = this.BYTESLEN
 
@@ -128,7 +132,7 @@ GrovePi.prototype.readBytes = function(length) {
   var buffer = new Buffer(length)
   var ret = false
   try {
-    var val = bus.i2cReadSync(ADDRESS, length, buffer)
+    var val = bus.i2cReadSync(address, length, buffer)
     ret = val > 0 ? buffer : false
   } catch (err) {
     ret = false
@@ -136,7 +140,9 @@ GrovePi.prototype.readBytes = function(length) {
     return ret
   }
 }
-GrovePi.prototype.writeBytes = function(bytes) {
+GrovePi.prototype.writeBytes = function(bytes, _address) {
+  var address = _address || ADDRESS
+
   var isOperative = this.checkStatus()
   if (!isOperative)
     return false
@@ -144,7 +150,7 @@ GrovePi.prototype.writeBytes = function(bytes) {
   var buffer = new Buffer(bytes)
   var ret = false
   try {
-    var val = bus.i2cWriteSync(ADDRESS, buffer.length, buffer)
+    var val = bus.i2cWriteSync(address, buffer.length, buffer)
     ret = val > 0 ? true : false
   } catch (err) {
     ret = false
