@@ -21,37 +21,37 @@ BarometerI2cSensor.COMMANDS = {
   , HP20X_READ_T          : [0x32]      //Read Temperature
 }
 BarometerI2cSensor.prototype.isAvailable = function() {
-  var write = this.board.writeBytes(this.COMMANDS.HP20X_READ_PARA_REG.concat([commands.unused, commands.unused, commands.unused]), this.COMMANDS.HP20X_I2C_DEV_ID)
+  var write = this.board.writeBytes(BarometerI2cSensor.COMMANDS.HP20X_READ_PARA_REG.concat([commands.unused, commands.unused, commands.unused]), BarometerI2cSensor.COMMANDS.HP20X_I2C_DEV_ID)
   if (write) {
-    this.board.readByte(this.COMMANDS.HP20X_I2C_DEV_ID)
-    return this.board.readBytes(this.COMMANDS.HP20X_I2C_DEV_ID) == this.COMMANDS.OK_HP20X_DEV
+    this.board.readByte(BarometerI2cSensor.COMMANDS.HP20X_I2C_DEV_ID)
+    return this.board.readBytes(BarometerI2cSensor.COMMANDS.HP20X_I2C_DEV_ID) == BarometerI2cSensor.COMMANDS.OK_HP20X_DEV
   } else {
     return false
   }
 }
 BarometerI2cSensor.prototype.readSubSensor = function(sensor) {
-  this.board.writeBytes(this.COMMANDS.HP20X_ADC_CVT.concat([commands.unused, commands.unused, commands.unused]), this.COMMANDS.HP20X_I2C_DEV_ID)
+  this.board.writeBytes(BarometerI2cSensor.COMMANDS.HP20X_ADC_CVT.concat([commands.unused, commands.unused, commands.unused]), BarometerI2cSensor.COMMANDS.HP20X_I2C_DEV_ID)
 
   this.board.wait(25)
 
-  this.board.writeBytes(sensor.concat([commands.unused, commands.unused, commands.unused]), this.COMMANDS.HP20X_I2C_DEV_ID)
+  this.board.writeBytes(sensor.concat([commands.unused, commands.unused, commands.unused]), BarometerI2cSensor.COMMANDS.HP20X_I2C_DEV_ID)
 
-  var bytes = this.board.readBytes(9, this.COMMANDS.HP20X_I2C_DEV_ID)
+  var bytes = this.board.readBytes(9, BarometerI2cSensor.COMMANDS.HP20X_I2C_DEV_ID)
   if (bytes instanceof Buffer) {
     return bytes[1] << 16 | bytes[2] << 8 | bytes[3]
   } else
     return false
 }
 BarometerI2cSensor.prototype.read = function() {
-  var write = this.board.writeBytes(this.COMMANDS.HP20X_SOFT_RST.concat([commands.unused, commands.unused, commands.unused]), this.COMMANDS.HP20X_I2C_DEV_ID)
+  var write = this.board.writeBytes(BarometerI2cSensor.COMMANDS.HP20X_SOFT_RST.concat([commands.unused, commands.unused, commands.unused]), BarometerI2cSensor.COMMANDS.HP20X_I2C_DEV_ID)
   if (write) {
     this.board.wait(100)
     if (this.isAvailable()) {
       // [ temperature, pressure, altitude ]
       return [
-              this.readSubSensor(this.COMMANDS.HP20X_READ_T),
-              this.readSubSensor(this.COMMANDS.HP20X_READ_P),
-              this.readSubSensor(this.COMMANDS.HP20X_READ_A),
+              this.readSubSensor(BarometerI2cSensor.COMMANDS.HP20X_READ_T),
+              this.readSubSensor(BarometerI2cSensor.COMMANDS.HP20X_READ_P),
+              this.readSubSensor(BarometerI2cSensor.COMMANDS.HP20X_READ_A),
              ]
     }
   } else {
