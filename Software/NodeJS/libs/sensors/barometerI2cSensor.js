@@ -3,7 +3,7 @@ var commands   = require('../commands')
 
 function BarometerI2cSensor(moduleType) {
   I2cSensor.apply(this, Array.prototype.slice.call(arguments))
-  this.moduleType = moduleType || this.VERSION.BMP085
+  this.moduleType = moduleType || BarometerI2cSensor.VERSION.BMP085
 }
 
 BarometerI2cSensor.prototype = new I2cSensor()
